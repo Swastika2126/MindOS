@@ -33,7 +33,7 @@ export default function VaultPage() {
       : files.filter((f) => f.category === activeFilter.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       <TopBar
         title="Knowledge Vault"
         searchPlaceholder="Search files, notes, links..."

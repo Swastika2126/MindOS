@@ -25,10 +25,9 @@ export default function PlannerPage() {
         searchPlaceholder="Search events or tasks..."
       />
 
-      <div className="grid grid-cols-3 gap-6 p-8 border border-red h-full
-      " >
+      <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-3 md:p-8">
         {/* Calendar */}
-        <div className="col-span-2 rounded-card border border-border bg-surface p-5">
+        <div className="rounded-card border border-border bg-surface p-5 md:col-span-2">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button className="text-text-muted hover:text-text-primary">

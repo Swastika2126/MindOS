@@ -12,8 +12,9 @@ export default function LoginForm() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Wire this up to your auth logic
-    console.log({ email, password });
+    // UI-only for now. Plug into lib/auth.ts (signInWithEmail) later.
+    void email;
+    void password;
   }
 
   return (

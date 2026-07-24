@@ -1,21 +1,15 @@
-import Sidebar from "@/components/layout/Sidebar";
+import BrandPanel from "@/components/login/BrandPanel";
+import LoginForm from "@/components/login/LoginForm";
 
 /**
- * Full-page wrapper for all dashboard pages. Centers a fixed-size
- * dashboard "card" on the page background, same pattern as LoginScreen.
+ * Centered auth card on the cream page background.
  */
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LoginScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg p-6">
-      <div className="flex h-[85vh] w-full max-w-[1400px] overflow-hidden rounded-2xl border border-border shadow-lg">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto bg-surface">
-          {children}
-        </main>
+      <div className="grid h-[min(85vh,720px)] w-full max-w-5xl overflow-hidden rounded-modal border border-border shadow-xl md:grid-cols-[1.1fr_1fr]">
+        <BrandPanel />
+        <LoginForm />
       </div>
     </div>
   );
