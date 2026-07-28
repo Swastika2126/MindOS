@@ -1,0 +1,91 @@
+/**
+ * colors.css
+ * -----------------------------------------------------------------------
+ * Single source of truth for every color used across MindOS —
+ * the auth screens (login/signup) and the dashboard app (planner,
+ * tasks, goals, vault, AI assistant, settings, focus mode).
+ * Change a value here and it updates everywhere it's used — components
+ * never hard-code a hex value, they only reference these variables
+ * (exposed to Tailwind v4 via the @theme block in globals.css).
+ * -----------------------------------------------------------------------
+ */
+
+:root {
+  /* Page background (behind the modal / behind the app shell) */
+  --color-bg: #faf6f2;
+
+  /* Modal panels (auth screens) */
+  --color-panel-left: #f3e6dd;   /* brand/intro panel */
+  --color-panel-right: #ffffff;  /* form panel */
+
+  /* Accent (brand color — buttons, highlights, active states) */
+  --color-accent: #c1694a;
+  --color-accent-hover: #a8563a;
+  --color-accent-soft: #f0dcd0;  /* light accent tint, e.g. icon backgrounds */
+
+  /* Text */
+  --color-text-primary: #241f1d;   /* headings, primary text */
+  --color-text-secondary: #665f5a; /* body copy */
+  --color-text-muted: #9c948d;     /* placeholders, captions */
+  --color-text-on-accent: #ffffff; /* text placed on top of accent color */
+
+  /* Borders & dividers */
+  --color-border: #e8ded4;
+
+  /* Form elements */
+  --color-input-bg: #faf8f6;
+  --color-input-border: #e2d8ce;
+
+  /* Feedback */
+  --color-error: #c0392b;
+  --color-success: #4a7c59;
+  --color-success-soft: #e1ede4;
+
+  /* Neutral utility */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* ---------------------------------------------------------------
+   * Dashboard shell (sidebar, top bar, cards)
+   * --------------------------------------------------------------- */
+  --color-sidebar-bg: #f9eee6;
+  --color-sidebar-item-hover: #f3e6dd;
+  --color-sidebar-item-active: #f0dcd0;
+  --color-sidebar-item-active-text: #c1694a;
+
+  --color-surface: #ffffff;        /* cards, panels on top of --color-bg */
+  --color-surface-muted: #f5efe9;  /* secondary card background, e.g. quick-add panel */
+
+  /* ---------------------------------------------------------------
+   * Priority badges (Tasks screen)
+   * --------------------------------------------------------------- */
+  --color-priority-high-bg: #f3d9d4;
+  --color-priority-high-text: #a8412f;
+
+  --color-priority-medium-bg: #f0dcd0;
+  --color-priority-medium-text: #a8563a;
+
+  --color-priority-low-bg: #ece7e0;
+  --color-priority-low-text: #78716a;
+
+  /* ---------------------------------------------------------------
+   * Category tags (Tasks / Knowledge Vault)
+   * --------------------------------------------------------------- */
+  --color-tag-study-bg: #f3d9d4;
+  --color-tag-study-text: #a8412f;
+
+  --color-tag-work-bg: #dde7de;
+  --color-tag-work-text: #4a7c59;
+
+  --color-tag-personal-bg: #f0dcd0;
+  --color-tag-personal-text: #a8563a;
+
+  --color-tag-health-bg: #dbe4ee;
+  --color-tag-health-text: #3d5a80;
+
+  /* ---------------------------------------------------------------
+   * Status pill (Settings → Integrations, e.g. "Connected")
+   * --------------------------------------------------------------- */
+  --color-status-connected-bg: #dde7de;
+  --color-status-connected-text: #4a7c59;
+}
