@@ -2,30 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Calendar,
-  CheckCircle,
-  Star,
-  FileText,
-  Database,
-  Sparkles,
-  Settings,
-} from "lucide-react";
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-}
-
-const navItems: NavItem[] = [
-  { label: "Planner", href: "/planner", icon: <Calendar size={18} /> },
-  { label: "Tasks", href: "/tasks", icon: <CheckCircle size={18} /> },
-  { label: "Goals", href: "/goals", icon: <Star size={18} /> },
-  { label: "Notes", href: "/notes", icon: <FileText size={18} /> },
-  { label: "Knowledge Vault", href: "/vault", icon: <Database size={18} /> },
-  { label: "AI Assistant", href: "/assistant", icon: <Sparkles size={18} /> },
-];
+import { Settings } from "lucide-react";
+import { navItems, settingsHref } from "@/lib/nav";
 
 interface SidebarProps {
   userName?: string;
@@ -34,16 +12,14 @@ interface SidebarProps {
 
 /**
  * Left navigation rail used on every dashboard screen.
- * Follows the same visual language as the login screen's BrandPanel:
- * cream background, serif logo text, terracotta accent for active state.
+ * Cream background, serif logo, terracotta accent for active state.
  */
 export default function Sidebar({ userName = "Guest", userPlan = "Free Plan" }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-64 shrink-0 flex-col justify-between bg-sidebarBg p-5">
+    <aside className="flex h-full w-64 shrink-0 flex-col justify-between border-r border-border bg-sidebarBg p-5">
       <div>
-        {/* Logo */}
         <div className="mb-8 flex items-center gap-2 px-1">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-sm font-bold text-text-onAccent">
             M
@@ -54,10 +30,10 @@ export default function Sidebar({ userName = "Guest", userPlan = "Free Plan" }: 
           </div>
         </div>
 
-        {/* Nav items */}
         <nav className="flex flex-col gap-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            const isActive = pathname.startsWith(item.href);
 
             return (
               <Link
@@ -69,7 +45,7 @@ export default function Sidebar({ userName = "Guest", userPlan = "Free Plan" }: 
                     : "text-text-secondary hover:bg-sidebarItemHover"
                 }`}
               >
-                {item.icon}
+                <Icon size={18} />
                 {item.label}
               </Link>
             );
@@ -78,7 +54,6 @@ export default function Sidebar({ userName = "Guest", userPlan = "Free Plan" }: 
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Affirmation card — same pattern as the login screen's quote card */}
         <div className="rounded-card border border-border bg-surface p-4">
           <p className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
             Daily affirmation
@@ -88,11 +63,10 @@ export default function Sidebar({ userName = "Guest", userPlan = "Free Plan" }: 
           </p>
         </div>
 
-        {/* Settings + profile */}
         <Link
-          href="/settings"
+          href={settingsHref}
           className={`flex items-center gap-3 rounded-card px-3 py-2.5 text-sm font-medium transition-colors ${
-            pathname === "/settings"
+            pathname.startsWith(settingsHref)
               ? "bg-sidebarItemActive text-sidebarItemActiveText"
               : "text-text-secondary hover:bg-sidebarItemHover"
           }`}

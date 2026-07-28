@@ -34,9 +34,9 @@ export default function FocusPage() {
   }
 
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-bg">
+    <div className="relative flex h-full flex-col items-center justify-center bg-bg">
       <Link
-        href="/planner"
+        href="/dashboard/planner"
         className="absolute right-8 top-6 rounded-card border border-dashed border-border px-3 py-1.5 text-xs font-medium text-text-secondary hover:border-accent hover:text-accent"
       >
         Exit Focus
@@ -73,7 +73,7 @@ export default function FocusPage() {
         </button>
       </div>
 
-      <p className="mt-10 text-xs text-text-muted">Focus streak: 3 days 🔥</p>
+      <p className="mt-10 text-xs text-text-muted">Focus streak: 3 days</p>
     </div>
   );
 }

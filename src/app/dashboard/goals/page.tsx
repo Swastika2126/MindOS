@@ -70,14 +70,14 @@ export default function GoalsPage() {
         }
       />
 
-      <div className="p-8">
+      <div className="p-6 md:p-8">
         <h2 className="font-serif text-xl text-text-primary">My Strategic Intentions</h2>
         <p className="mt-1 max-w-xl text-sm text-text-secondary">
           Visualize your long-term aspirations. Break them down, track your momentum, and find
           clarity in progress.
         </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-5">
+        <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
           {goals.map((goal) => (
             <div key={goal.id} className="rounded-card border border-border bg-surface p-5">
               <div className="flex items-start justify-between">

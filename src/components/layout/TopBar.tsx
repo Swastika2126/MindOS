@@ -22,12 +22,12 @@ export default function TopBar({
   userAvatarUrl,
 }: TopBarProps) {
   return (
-    <header className="flex items-center justify-between border-b border-border bg-bg px-8 py-5">
-      <h1 className="font-serif text-2xl text-text-primary">{title}</h1>
+    <header className="flex items-center justify-between gap-4 border-b border-border bg-bg px-4 py-4 md:px-8 md:py-5">
+      <h1 className="font-serif text-xl text-text-primary md:text-2xl">{title}</h1>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         {searchPlaceholder && (
-          <div className="flex items-center gap-2 rounded-card border border-input-border bg-input-bg px-3.5 py-2 w-64">
+          <div className="hidden items-center gap-2 rounded-card border border-input-border bg-input-bg px-3.5 py-2 sm:flex sm:w-48 md:w-64">
             <Search size={16} className="text-text-muted" />
             <input
               type="text"

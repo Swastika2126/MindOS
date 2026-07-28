@@ -33,25 +33,25 @@ export default function AssistantPage() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
-    // Placeholder — wire this up to the Groq API call
+    // Placeholder reply until an AI backend is connected.
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          text: "Got it — connect this to the Groq API to generate a real response here.",
+          text: "Got it — connect an AI backend here to generate a real response.",
         },
       ]);
     }, 500);
   }
 
   return (
-    <div className="flex h-full">
-      <div className="flex flex-1 flex-col">
+    <div className="flex h-full flex-col lg:flex-row">
+      <div className="flex min-h-0 flex-1 flex-col">
         <TopBar title="AI Assistant" />
 
-        <div className="flex-1 space-y-4 overflow-y-auto p-8">
+        <div className="flex-1 space-y-4 overflow-y-auto p-6 md:p-8">
           {messages.map((m) => (
             <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
@@ -89,8 +89,7 @@ export default function AssistantPage() {
         </div>
       </div>
 
-      {/* Suggestions sidebar */}
-      <div className="w-72 shrink-0 border-l border-border p-6">
+      <div className="w-full shrink-0 border-t border-border p-6 lg:w-72 lg:border-l lg:border-t-0">
         <p className="mb-4 text-sm font-semibold text-text-primary">Try asking...</p>
         <div className="flex flex-col gap-3">
           {suggestions.map((s) => (

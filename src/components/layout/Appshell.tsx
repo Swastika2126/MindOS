@@ -8,15 +8,14 @@ interface AppShellProps {
 }
 
 /**
- * Wraps Sidebar + main content. TopBar is NOT included here on purpose —
- * each page renders its own TopBar since the title/search/action button
- * differs per page. AppShell only owns the outer frame.
+ * Full-bleed dashboard frame: Sidebar + scrollable main.
+ * TopBar is rendered per page (title/actions differ).
  */
 export default function AppShell({ children, userName, userPlan }: AppShellProps) {
   return (
-    <div className="flex h-screen bg-bg border border-red">
+    <div className="flex h-screen bg-bg">
       <Sidebar userName={userName} userPlan={userPlan} />
-      <main className="flex-1 overflow-y-auto border border-red-500">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-surface">{children}</main>
     </div>
   );
 }

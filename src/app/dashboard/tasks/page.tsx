@@ -3,44 +3,29 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import TopBar from "@/components/layout/TopBar";
-import Sidebar from "@/components/layout/Sidebar";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import {
+  initialTasks,
+  type Task,
+  type TaskCategory,
+  type TaskPriority,
+} from "@/lib/types/task";
 
-type TaskPriority = "high" | "medium" | "low";
-type TaskCategory = "study" | "work" | "personal" | "health";
-
-interface Task {
-  id: string;
-  title: string;
-  priority: TaskPriority;
-  category: TaskCategory;
-  completed: boolean;
-}
-
-const initialTasks: Task[] = [
-  { id: "1", title: "DBMS Assignment", priority: "high", category: "study", completed: false },
-  { id: "2", title: "Internship Weekly Report", priority: "high", category: "work", completed: false },
-  { id: "3", title: "DAA Revision Chapter 4", priority: "medium", category: "study", completed: false },
-  { id: "4", title: "Resume Update", priority: "medium", category: "work", completed: true },
-  { id: "5", title: "Buy stationery", priority: "low", category: "personal", completed: false },
-];
-
-const priorityTone: Record<TaskPriority, "high" | "medium" | "low"> = {
+const priorityTone: Record<TaskPriority, TaskPriority> = {
   high: "high",
   medium: "medium",
   low: "low",
 };
 
-const categoryTone: Record<TaskCategory, "study" | "work" | "personal" | "health"> = {
+const categoryTone: Record<TaskCategory, TaskCategory> = {
   study: "study",
   work: "work",
   personal: "personal",
   health: "health",
 };
 
-// Frontend-only for now — tasks live in local state. Swap this for
-// lib/tasks.ts (Firestore CRUD, already written) when auth is reconnected.
+/** Tasks live in local state for now. Persist later via Firestore + auth. */
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [filter, setFilter] = useState<"all" | "pending" | "completed">("pending");
@@ -91,8 +76,8 @@ export default function TasksPage() {
         }
       />
 
-      <div className="p-8">
-        <div className="mb-6 flex gap-2">
+      <div className="p-6 md:p-8">
+        <div className="mb-6 flex flex-wrap gap-2">
           {(["all", "pending", "completed"] as const).map((f) => (
             <button
               key={f}
@@ -109,7 +94,7 @@ export default function TasksPage() {
         </div>
 
         {showAddForm && (
-          <div className="mb-6 flex gap-2 rounded-card border border-border bg-surface p-3">
+          <div className="mb-6 flex flex-col gap-2 rounded-card border border-border bg-surface p-3 sm:flex-row">
             <input
               type="text"
               value={newTitle}
@@ -135,21 +120,23 @@ export default function TasksPage() {
           {filtered.map((task) => (
             <div
               key={task.id}
-              className="flex items-center justify-between rounded-card border border-border bg-surface px-4 py-3"
+              className="flex flex-col gap-3 rounded-card border border-border bg-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <button
                   onClick={() => toggleTask(task.id)}
                   aria-label={task.completed ? "Mark as pending" : "Mark as completed"}
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                     task.completed ? "border-accent bg-accent" : "border-input-border"
                   }`}
                 >
-                  {task.completed && <span className="h-2 w-2 rounded-full bg-white" />}
+                  {task.completed && (
+                    <span className="h-2 w-2 rounded-full bg-text-onAccent" />
+                  )}
                 </button>
 
                 <span
-                  className={`text-sm ${
+                  className={`truncate text-sm ${
                     task.completed ? "text-text-muted line-through" : "text-text-primary"
                   }`}
                 >
@@ -159,7 +146,7 @@ export default function TasksPage() {
                 <Badge label={task.category} tone={categoryTone[task.category]} />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pl-8 sm:pl-0">
                 <Badge label={task.priority} tone={priorityTone[task.priority]} />
                 <button
                   onClick={() => removeTask(task.id)}

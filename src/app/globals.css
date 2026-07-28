@@ -59,6 +59,9 @@
 
   --radius-card: 1rem;
   --radius-modal: 1.5rem;
+
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
 }
 
 body {

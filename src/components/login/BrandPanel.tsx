@@ -50,7 +50,7 @@ export default function BrandPanel() {
         </p>
 
         {/* Feature cards */}
-        <div className="mt-8 grid grid-cols-3 gap-3">
+        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {features.map((feature) => (
             <div
               key={feature.title}
@@ -60,7 +60,9 @@ export default function BrandPanel() {
             >
               <span
                 className={`flex h-9 w-9 items-center justify-center rounded-md ${
-                  feature.active ? "bg-white/20 text-text-onAccent" : "bg-accent-soft text-accent"
+                  feature.active
+                    ? "bg-surface/20 text-text-onAccent"
+                    : "bg-accent-soft text-accent"
                 }`}
               >
                 {feature.icon}
@@ -76,7 +78,7 @@ export default function BrandPanel() {
                 </p>
                 <p
                   className={`mt-1 text-[11px] leading-snug ${
-                    feature.active ? "text-white/80" : "text-text-muted"
+                    feature.active ? "text-text-onAccent/80" : "text-text-muted"
                   }`}
                 >
                   {feature.description}

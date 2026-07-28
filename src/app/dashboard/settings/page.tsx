@@ -8,9 +8,7 @@ import Badge from "@/components/ui/Badge";
 
 const tabs = ["Profile", "Notifications", "Integrations", "Appearance", "Account"] as const;
 
-// Frontend-only for now — profile lives in local state. Swap this for
-// lib/userProfile.ts (Firestore read/write, already written) when
-// auth is reconnected.
+// Profile form is local-only for now. Persist via Firestore after auth is wired.
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Profile");
 
@@ -34,15 +32,15 @@ export default function SettingsPage() {
     <div>
       <TopBar title="Settings" />
 
-      <div className="flex">
-        <div className="w-56 shrink-0 border-r border-border p-6">
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full shrink-0 border-b border-border p-6 md:w-56 md:border-b-0 md:border-r">
           <p className="mb-4 px-3 text-sm font-semibold text-text-primary">Configuration</p>
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-row gap-1 overflow-x-auto md:flex-col">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-card px-3 py-2 text-left text-sm font-medium transition-colors ${
+                className={`shrink-0 rounded-card px-3 py-2 text-left text-sm font-medium transition-colors ${
                   activeTab === tab
                     ? "bg-sidebarItemActive text-sidebarItemActiveText"
                     : "text-text-secondary hover:bg-sidebarItemHover"
@@ -54,7 +52,7 @@ export default function SettingsPage() {
           </nav>
         </div>
 
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-6 md:p-8">
           {activeTab === "Profile" && (
             <div className="max-w-2xl">
               <h2 className="font-serif text-xl text-text-primary">Profile</h2>
@@ -74,7 +72,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-4">
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input id="fullName" label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
                 <Input id="email" label="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <Input id="university" label="University" value={university} onChange={(e) => setUniversity(e.target.value)} />
