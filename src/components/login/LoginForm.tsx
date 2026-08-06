@@ -4,17 +4,52 @@ import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
+import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // UI-only for now. Plug into lib/auth.ts (signInWithEmail) later.
-    void email;
-    void password;
+
+    setError("");
+    setLoading(true);
+
+    try {
+      await signInWithEmail(email, password);
+      router.push("/dashboard/planner");
+    } catch (err: any) {
+      switch (err.code) {
+        case "auth/invalid-credential":
+          setError("Invalid email or password.");
+          break;
+
+        case "auth/user-not-found":
+          setError("No account found with this email.");
+          break;
+
+        case "auth/wrong-password":
+          setError("Incorrect password.");
+          break;
+
+        case "auth/too-many-requests":
+          setError("Too many attempts. Please try again later.");
+          break;
+
+        default:
+          setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -25,7 +60,31 @@ export default function LoginForm() {
       </p>
 
       {/* Google sign-in */}
-      <Button variant="secondary" className="mt-6" type="button">
+      <Button
+        variant="secondary"
+        className="mt-6"
+        type="button"
+        onClick={async () => {
+          try {
+            setError("");
+            await signInWithGoogle();
+            router.push("/dashboard/planner");
+          } catch (err: any) {
+            switch (err.code) {
+              case "auth/popup-closed-by-user":
+                setError("Sign-in was cancelled.");
+                break;
+
+              case "auth/too-many-requests":
+                setError("Too many attempts. Please try again later.");
+                break;
+
+              default:
+                setError("Something went wrong. Please try again.");
+            }
+          }
+        }}
+      >
         <GoogleIcon />
         Continue with Google
       </Button>
@@ -36,6 +95,12 @@ export default function LoginForm() {
         <span className="text-xs font-medium text-text-muted">OR</span>
         <span className="h-px flex-1 bg-border" />
       </div>
+
+      {error && (
+        <p className="mb-4 rounded-lg bg-red-100 px-4 py-2 text-sm text-red-600">
+          {error}
+        </p>
+      )}
 
       {/* Form */}
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -76,8 +141,12 @@ export default function LoginForm() {
           </div>
         </div>
 
-        <Button type="submit" className="mt-2">
-          Sign In
+        <Button
+          type="submit"
+          className="mt-2"
+          disabled={loading}
+        >
+          {loading ? "Signing In..." : "Sign In"}
         </Button>
       </form>
 
