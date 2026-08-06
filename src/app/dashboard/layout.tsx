@@ -1,4 +1,4 @@
-import AppShell from "@/components/layout/AppShell";
+import AppShell from "@/components/layout/Appshell"
 
 /**
  * Full-bleed dashboard shell for all /dashboard/* routes.
