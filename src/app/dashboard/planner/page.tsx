@@ -47,6 +47,7 @@ function formatUpcomingLabel(event: CalendarEvent) {
 
 export default function PlannerPage() {
   const [view, setView] = useState<"day" | "week" | "month">("month");
+  const [search, setSearch] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -75,9 +76,15 @@ export default function PlannerPage() {
     return unsubscribe;
   }, [userId]);
 
+  const filteredEvents = useMemo(() => {
+    if (!search.trim()) return events;
+    const term = search.toLowerCase();
+    return events.filter((e) => e.title.toLowerCase().includes(term));
+  }, [events, search]);
+
   const eventsByDate = useMemo(() => {
     const map = new Map<string, CalendarEvent[]>();
-    for (const event of events) {
+    for (const event of filteredEvents) {
       const list = map.get(event.date) ?? [];
       list.push(event);
       map.set(event.date, list);
@@ -86,14 +93,14 @@ export default function PlannerPage() {
       list.sort((a, b) => (a.time ?? "").localeCompare(b.time ?? ""));
     }
     return map;
-  }, [events]);
+  }, [filteredEvents]);
 
   const upcoming = useMemo(() => {
     const now = new Date();
     const todayKey = toDateKey(now);
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-    return events
+    return filteredEvents
       .filter((e) => {
         if (e.date > todayKey) return true;
         if (e.date < todayKey) return false;
@@ -107,7 +114,7 @@ export default function PlannerPage() {
         return (a.time ?? "").localeCompare(b.time ?? "");
       })
       .slice(0, 3);
-  }, [events]);
+  }, [filteredEvents]);
 
   const calendarCells = useMemo(() => {
     const year = currentMonth.getFullYear();
@@ -158,7 +165,12 @@ export default function PlannerPage() {
 
   return (
     <div className="h-full">
-      <TopBar title="Planner" searchPlaceholder="Search events or tasks..." />
+      <TopBar
+        title="Planner"
+        searchPlaceholder="Search events or tasks..."
+        searchValue={search}
+        onSearchChange={setSearch}
+      />
 
       <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-3 md:p-8">
         {/* Calendar */}
