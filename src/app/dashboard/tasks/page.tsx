@@ -25,26 +25,32 @@ const categoryTone: Record<TaskCategory, TaskCategory> = {
   health: "health",
 };
 
-/** Tasks live in local state for now. Persist later via Firestore + auth. */
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [filter, setFilter] = useState<"all" | "pending" | "completed">("pending");
+  const [search, setSearch] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const [newPriority, setNewPriority] = useState<TaskPriority>("medium");
+  const [newCategory, setNewCategory] = useState<TaskCategory>("personal");
   const [showAddForm, setShowAddForm] = useState(false);
 
   function handleAddTask() {
     if (!newTitle.trim()) return;
+
     setTasks((prev) => [
       ...prev,
       {
         id: Date.now().toString(),
         title: newTitle.trim(),
-        priority: "medium",
-        category: "personal",
+        priority: newPriority,
+        category: newCategory,
         completed: false,
       },
     ]);
+
     setNewTitle("");
+    setNewPriority("medium");
+    setNewCategory("personal");
     setShowAddForm(false);
   }
 
@@ -59,9 +65,22 @@ export default function TasksPage() {
   }
 
   const filtered = tasks.filter((t) => {
-    if (filter === "pending") return !t.completed;
-    if (filter === "completed") return t.completed;
-    return true;
+    const matchesFilter =
+      filter === "all"
+        ? true
+        : filter === "pending"
+        ? !t.completed
+        : t.completed;
+
+    const searchText = search.trim().toLowerCase();
+
+    const matchesSearch =
+      !searchText ||
+      t.title.toLowerCase().includes(searchText) ||
+      t.category.toLowerCase().includes(searchText) ||
+      t.priority.toLowerCase().includes(searchText);
+
+    return matchesFilter && matchesSearch;
   });
 
   return (
@@ -69,8 +88,13 @@ export default function TasksPage() {
       <TopBar
         title="Tasks"
         searchPlaceholder="Search tasks..."
+        searchValue={search}
+        onSearchChange={setSearch}
         action={
-          <Button className="w-auto px-5" onClick={() => setShowAddForm((s) => !s)}>
+          <Button
+            className="w-auto px-5"
+            onClick={() => setShowAddForm((s) => !s)}
+          >
             <Plus size={16} /> Add Task
           </Button>
         }
@@ -94,17 +118,48 @@ export default function TasksPage() {
         </div>
 
         {showAddForm && (
-          <div className="mb-6 flex flex-col gap-2 rounded-card border border-border bg-surface p-3 sm:flex-row">
+          <div className="mb-6 flex flex-col gap-3 rounded-card border border-border bg-surface p-3">
             <input
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
               placeholder="What needs to be done?"
-              className="flex-1 rounded-card border border-input-border bg-input-bg px-3.5 py-2 text-sm focus:outline-none focus:border-accent"
+              className="rounded-card border border-input-border bg-input-bg px-3.5 py-2 text-sm focus:border-accent focus:outline-none"
               autoFocus
             />
-            <Button className="w-auto px-5" onClick={handleAddTask}>
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <select
+                value={newPriority}
+                onChange={(e) =>
+                  setNewPriority(e.target.value as TaskPriority)
+                }
+                className="rounded-card border border-input-border bg-input-bg px-3.5 py-2 text-sm focus:border-accent focus:outline-none"
+              >
+                <option value="low">Low Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="high">High Priority</option>
+              </select>
+
+              <select
+                value={newCategory}
+                onChange={(e) =>
+                  setNewCategory(e.target.value as TaskCategory)
+                }
+                className="rounded-card border border-input-border bg-input-bg px-3.5 py-2 text-sm focus:border-accent focus:outline-none"
+              >
+                <option value="study">Study</option>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="health">Health</option>
+              </select>
+            </div>
+
+            <Button
+              className="w-auto self-start px-5"
+              onClick={handleAddTask}
+            >
               Add
             </Button>
           </div>
@@ -125,9 +180,15 @@ export default function TasksPage() {
               <div className="flex min-w-0 items-center gap-3">
                 <button
                   onClick={() => toggleTask(task.id)}
-                  aria-label={task.completed ? "Mark as pending" : "Mark as completed"}
+                  aria-label={
+                    task.completed
+                      ? "Mark as pending"
+                      : "Mark as completed"
+                  }
                   className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                    task.completed ? "border-accent bg-accent" : "border-input-border"
+                    task.completed
+                      ? "border-accent bg-accent"
+                      : "border-input-border"
                   }`}
                 >
                   {task.completed && (
@@ -137,17 +198,26 @@ export default function TasksPage() {
 
                 <span
                   className={`truncate text-sm ${
-                    task.completed ? "text-text-muted line-through" : "text-text-primary"
+                    task.completed
+                      ? "text-text-muted line-through"
+                      : "text-text-primary"
                   }`}
                 >
                   {task.title}
                 </span>
 
-                <Badge label={task.category} tone={categoryTone[task.category]} />
+                <Badge
+                  label={task.category}
+                  tone={categoryTone[task.category]}
+                />
               </div>
 
               <div className="flex items-center gap-3 pl-8 sm:pl-0">
-                <Badge label={task.priority} tone={priorityTone[task.priority]} />
+                <Badge
+                  label={task.priority}
+                  tone={priorityTone[task.priority]}
+                />
+
                 <button
                   onClick={() => removeTask(task.id)}
                   aria-label="Delete task"

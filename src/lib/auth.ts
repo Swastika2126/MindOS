@@ -1,18 +1,32 @@
-/**
- * Auth seam for MindOS. UI is not wired yet — implement these against
- * Firebase Auth (see lib/firebase.ts) when connecting sign-in.
- */
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  type User,
+} from "firebase/auth";
 
-export async function signInWithEmail(email: string, password: string): Promise<void> {
-  void email;
-  void password;
-  throw new Error("TODO: implement signInWithEmail with Firebase Auth");
+import { auth } from "./firebase";
+
+const googleProvider = new GoogleAuthProvider();
+
+export async function signInWithEmail(
+  email: string,
+  password: string
+) {
+  return await signInWithEmailAndPassword(auth, email, password);
 }
 
-export async function signInWithGoogle(): Promise<void> {
-  throw new Error("TODO: implement signInWithGoogle with Firebase Auth");
+export async function signInWithGoogle() {
+  return await signInWithPopup(auth, googleProvider);
 }
 
-export async function signOut(): Promise<void> {
-  throw new Error("TODO: implement signOut with Firebase Auth");
+export async function signOut() {
+  return await firebaseSignOut(auth);
+}
+export function subscribeToAuthState(
+  callback: (user: User | null) => void
+) {
+  return onAuthStateChanged(auth, callback);
 }
